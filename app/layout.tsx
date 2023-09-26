@@ -1,8 +1,14 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
+import { Navigation } from '@/components/navigation'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-primary' })
+const scriptinaPro = localFont({
+  src: '../public/fonts/ScriptinaPro.otf',
+  variable: '--font-display',
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,8 +21,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="pt-BR">
+      <body
+        className={`${inter.variable} ${scriptinaPro.variable} bg-background font-primary `}
+      >
+        <div className="max-w-7xl relative mx-auto h-full grid grid-cols-[1.7fr_4fr_2fr]">
+          <Navigation />
+          {children}
+          <aside className="border-l border-l-border"></aside>
+        </div>
+      </body>
     </html>
   )
 }
