@@ -1,72 +1,5 @@
-import { NewPost } from '@/components/new-post'
-import { Tweet } from '@/components/tweet'
-
-const tweets = [
-  {
-    id: '1234567890123456789',
-    text: 'the whole comparing typescript to rust or go is tiring. \n\nof course people dont use typescript because of its speed, they use it because they have stockholm syndrome',
-    created_at: '2023-09-23T12:34:56Z',
-    user: {
-      id: '9876543210987654321',
-      screen_name: 'eliasnsz',
-      name: 'Elias Souza',
-      followers_count: 1000,
-      profile_image_url: 'https://github.com/eliasnsz.png',
-    },
-    retweets: 10,
-    comments: 8,
-    favorites: 20,
-    hashtags: ['exemplo', 'twitter'],
-    mentions: ['amigo1', 'amigo2'],
-  },
-  {
-    id: '1234567890123456789',
-    text: 'the whole comparing typescript to rust or go is tiringof course people dont use typescript because of its speed, they use it because they have stockholm syndrome',
-    created_at: '2023-08-13T12:34:56Z',
-    user: {
-      id: '9876543210987654321',
-      screen_name: 'eliasnsz',
-      name: 'Elias Souza',
-      followers_count: 1000,
-      profile_image_url: 'https://github.com/eliasnsz.png',
-    },
-    retweets: 10,
-    comments: 12,
-    favorites: 20,
-    hashtags: ['exemplo', 'twitter'],
-    mentions: ['amigo1', 'amigo2'],
-    media: [
-      {
-        type: 'photo',
-        url: 'https://pbs.twimg.com/media/F6opZmibQAAZCGB?format=jpg&name=4096x4096',
-      },
-    ],
-  },
-  {
-    id: '1234567890123456789',
-    text: 'the whole comparing typescript to rust or go is tiringof course people dont use typescript because of its speed, they use it because they have stockholm syndrome',
-    created_at: '2023-08-13T12:34:56Z',
-    user: {
-      id: '9876543210987654321',
-      screen_name: 'eliasnsz',
-      name: 'Elias Souza',
-      followers_count: 1000,
-      profile_image_url: 'https://github.com/eliasnsz.png',
-    },
-    retweets: 10,
-    comments: 12,
-    favorites: 20,
-    hashtags: ['exemplo', 'twitter'],
-    mentions: ['amigo1', 'amigo2'],
-    media: [
-      {
-        type: 'video',
-        url: 'https://i.imgur.com/oQQP5IP.mp4',
-      },
-    ],
-  },
-]
-
+import { Feed } from '@/components/feed'
+import { NewTweetForm } from '@/components/new-tweet-form'
 export default function Home() {
   return (
     <div className="remove-scrollbar relative overflow-y-scroll h-screen">
@@ -84,14 +17,8 @@ export default function Home() {
           </div>
         </div>
       </header>
-      {/* New Post Section */}
-      <NewPost />
-
-      <div className="h-screen divide-y divide-border ">
-        {tweets.map((tweet, index) => {
-          return <Tweet key={index} tweet={tweet} />
-        })}
-      </div>
+      <NewTweetForm />
+      <Feed />
     </div>
   )
 }

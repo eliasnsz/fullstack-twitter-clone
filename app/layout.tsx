@@ -1,8 +1,11 @@
-import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+
+import './globals.css'
 import localFont from 'next/font/local'
+import { Inter } from 'next/font/google'
+
 import { Navigation } from '@/components/navigation'
+import QueryClientProvider from '@/lib/queryCient'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-primary' })
 const scriptinaPro = localFont({
@@ -22,15 +25,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${inter.variable} ${scriptinaPro.variable} bg-background font-primary `}
-      >
-        <div className="max-w-7xl relative mx-auto h-full grid grid-cols-[1.7fr_4fr_2fr]">
-          <Navigation />
-          {children}
-          <aside className="border-l border-l-border"></aside>
-        </div>
-      </body>
+      <QueryClientProvider>
+        <body
+          className={`${inter.variable} ${scriptinaPro.variable} bg-background font-primary `}
+        >
+          <div className="max-w-7xl relative mx-auto h-full grid grid-cols-[1.7fr_4fr_2fr]">
+            <Navigation />
+            {children}
+            <aside className="border-l border-l-border"></aside>
+          </div>
+        </body>
+      </QueryClientProvider>
     </html>
   )
 }

@@ -1,16 +1,17 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
   Calendar,
   ChevronDown,
   Globe2,
   Image as ImageIcon,
+  Loader2,
   Smile,
 } from 'lucide-react'
 import TextArea from 'react-textarea-autosize'
 
-import { Avatar, AvatarImage } from './ui/avatar'
-import { Separator } from './ui/separator'
+import { Avatar, AvatarImage } from '../ui/avatar'
+import { Separator } from '../ui/separator'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,13 +21,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from './ui/alert-dialog'
-import { Button } from './ui/button'
+} from '../ui/alert-dialog'
+import { Button } from '../ui/button'
+import { createNewTweet } from '@/actions/create-new-tweet'
+import { useQueryClient } from 'react-query'
 
-export function NewPost() {
+export function NewTweetForm() {
   const inputRef = useRef<null | HTMLTextAreaElement>(null)
-  const [contentExclusionAlert, setContentExclusionAlert] = useState(false)
+
+  const queryClient = useQueryClient()
+
   const [isActive, setIsActive] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [contentExclusionAlert, setContentExclusionAlert] = useState(false)
+
   function handleKeyPress(event: KeyboardEvent) {
     if (event.key === 'Escape' && inputRef.current) {
       if (inputRef.current.value.length > 0) {
@@ -56,31 +64,27 @@ export function NewPost() {
     }
   }
 
+  async function handleCreateTweet(event: FormEvent) {
+    event.preventDefault()
+    setIsLoading(true)
+    const text = inputRef.current?.value
+
+    if (!text) {
+      cleanInputAndBlur()
+      setIsLoading(false)
+      return
+    }
+
+    await createNewTweet({ text })
+    await queryClient.invalidateQueries('tweets')
+    cleanInputAndBlur()
+    setIsLoading(false)
+  }
+
   return (
     <div className="p-3 border-b border-b-border">
-      <AlertDialog open={contentExclusionAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Descartar postagem?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Essa ação não pode ser desfeita e você perderá seu rascunho.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setContentExclusionAlert(false)}>
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
-              onClick={cleanInputAndBlur}
-            >
-              Descartar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <form>
+      {/* Create new post form */}
+      <form onSubmit={handleCreateTweet}>
         <div className="flex gap-4">
           <Avatar>
             <AvatarImage src="https://github.com/eliasnsz.png" />
@@ -116,13 +120,44 @@ export function NewPost() {
                 <Smile className="h-8 w-8 p-1.5 hover:bg-muted rounded-full cursor-pointer transition-colors" />
                 <Calendar className="h-8 w-8 p-1.5 hover:bg-muted rounded-full cursor-pointer transition-colors" />
               </div>
-              <Button className="rounded-full px-5" type="submit">
-                Postar
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="rounded-full px-5 min-w-[90px]"
+              >
+                {isLoading ? (
+                  <Loader2 className="animate-spin text-muted-foreground" />
+                ) : (
+                  'Postar'
+                )}
               </Button>
             </div>
           </div>
         </div>
       </form>
+
+      {/* Confirm content exclusion alert */}
+      <AlertDialog open={contentExclusionAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Descartar postagem?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Essa ação não pode ser desfeita e você perderá seu rascunho.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setContentExclusionAlert(false)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
+              onClick={cleanInputAndBlur}
+            >
+              Descartar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

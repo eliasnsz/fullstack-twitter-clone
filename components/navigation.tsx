@@ -1,9 +1,9 @@
+import { Bell, HomeIcon, MoreHorizontal, SearchIcon, User2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import twitterLogo from '@/public/logo.svg'
-import { Bell, HomeIcon, MoreHorizontal, SearchIcon, User2 } from 'lucide-react'
 
 const navigation = [
   {
