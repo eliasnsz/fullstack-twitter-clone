@@ -1,17 +1,23 @@
 import { ComponentProps } from 'react'
 
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import { Tweet } from '@/types/tweet'
 
-type Props = ComponentProps<'div'>
+interface Props extends ComponentProps<'div'> {
+  tweet: Tweet
+}
 
-export function Root(props: Props) {
+export function Root({ className, tweet, ...props }: Props) {
   return (
-    <div
-      className={cn(
-        'px-4 py-3 gap-4 flex hover:bg-muted cursor-pointer border-b border-b-border',
-        props.className,
-      )}
-      {...props}
-    />
+    <Link href={`/${tweet.user.username}/status/${tweet.id}`}>
+      <div
+        className={cn(
+          'px-4 py-3 gap-4 flex hover:bg-muted border-b border-b-border',
+          className,
+        )}
+        {...props}
+      />
+    </Link>
   )
 }

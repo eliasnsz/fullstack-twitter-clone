@@ -1,0 +1,2 @@
+-- AddForeignKey
+ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_rootId_fkey" FOREIGN KEY ("rootId") REFERENCES "Tweet"("id") ON DELETE SET NULL ON UPDATE CASCADE;

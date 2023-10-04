@@ -14,7 +14,7 @@ export function TextContent({ value, className }: Props) {
       readOnly
       value={value}
       className={cn(
-        'pr-4 block my-1 border-none leading-snug bg-inherit text-foreground -mt-1 w-full resize-none remove-scrollbar outline-none',
+        'pr-4 block my-1 cursor-pointer border-none leading-snug bg-inherit text-foreground -mt-1 w-full resize-none remove-scrollbar outline-none',
         className,
       )}
     />

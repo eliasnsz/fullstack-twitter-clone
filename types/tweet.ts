@@ -7,8 +7,9 @@ export interface Tweet {
   user: User
   retweets: number
   comments: number
-  likes: number
+  likes_count: number
   views: number
+  children: Tweet[] | []
   hashtags: string[] | []
   mentions: string[] | []
   media:
@@ -17,4 +18,10 @@ export interface Tweet {
         type: string
         url: string
       }[]
+  parentId: string | null
+  rootId: string | null
+  _count: {
+    children: number
+    rootChildren: number
+  }
 }

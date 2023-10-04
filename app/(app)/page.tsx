@@ -1,5 +1,6 @@
 import { Feed } from '@/components/feed'
 import { NewTweetForm } from '@/components/new-tweet-form'
+
 export default function Home() {
   return (
     <div className="remove-scrollbar relative overflow-y-scroll h-screen">
@@ -18,7 +19,7 @@ export default function Home() {
         </div>
       </header>
       <NewTweetForm />
-      <Feed />
+      <Feed queryName="tweets" onlyReplies={false} limit={10} />
     </div>
   )
 }

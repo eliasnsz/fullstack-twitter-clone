@@ -12,16 +12,16 @@ datasource db {
 
 model User {
   id                String   @id @default(uuid())
-  username          String   @unique
+  username          String?  @unique
   name              String
   email             String   @unique
   description       String?
   location          String?
-  followers_count   Int
-  following_count   Int
-  tweets_count      Int
+  followers_count   Int?     @default(0)
+  following_count   Int?     @default(0)
+  tweets_count      Int?     @default(0)
   created_at        DateTime @default(now())
-  birthday          String
+  birthday          String?
   profile_image_url String?
   cover_image_url   String?
   verified          Boolean  @default(false)
@@ -32,14 +32,21 @@ model Tweet {
   id     String @id @default(uuid())
   userId String
 
-  text       String
-  created_at DateTime @default(now())
-  retweets   Int      @default(0)
-  comments   Int      @default(0)
-  likes      Int      @default(0)
-  views      Int      @default(0)
-  hashtags   String[]
-  mentions   String[]
+  text        String
+  created_at  DateTime @default(now())
+  retweets    Int      @default(0)
+  comments    Int      @default(0)
+  likes_count Int      @default(0)
+  views       Int      @default(0)
+  hashtags    String[]
+  mentions    String[]
+  user        User     @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
+  parent   Tweet?  @relation("Parent", fields: [parentId], references: [id])
+  parentId String?
+  children Tweet[] @relation("Parent")
+
+  root         Tweet?  @relation("Root", fields: [rootId], references: [id])
+  rootId       String?
+  rootChildren Tweet[] @relation("Root")
 }

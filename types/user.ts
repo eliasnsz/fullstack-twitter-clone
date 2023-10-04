@@ -1,6 +1,6 @@
 export interface User {
   id: string
-  username: string
+  username: string | null
   name: string
   email: string
   description: string | null

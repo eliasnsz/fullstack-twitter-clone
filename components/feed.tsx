@@ -1,20 +1,30 @@
 'use client'
+import React, { useEffect } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { useInView } from 'react-intersection-observer'
-
-import { getTweets } from '@/actions/get-tweets'
-import { Tweet } from './tweet'
-import { Skeleton } from './ui/skeleton'
 import { Loader2 } from 'lucide-react'
-import React, { useEffect } from 'react'
 
-export function Feed() {
+import { FeedFetchProps, getTweets } from '@/actions/get-tweets'
+import { Skeleton } from './ui/skeleton'
+import { Tweet } from './tweet'
+
+export function Feed({
+  limit,
+  username,
+  queryName,
+  onlyReplies,
+}: FeedFetchProps) {
   const { ref, inView } = useInView()
 
   const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ['tweets'],
+    [queryName],
     async ({ pageParam = 0 }) =>
-      await getTweets({ page: pageParam, limit: 10 }),
+      await getTweets({
+        page: pageParam,
+        limit,
+        username,
+        onlyReplies,
+      }),
     {
       staleTime: 60 * 1000, // 5 seconds
       keepPreviousData: true,
@@ -53,16 +63,18 @@ export function Feed() {
           <React.Fragment key={index}>
             {tweets?.map((tweet, index) => {
               return (
-                <Tweet.Root key={index}>
-                  <Tweet.Profile tweet={tweet} />
-                  <Tweet.ContentRoot>
-                    <Tweet.UserInfo tweet={tweet} />
-                    <Tweet.TextContent value={tweet.text} />
-                    <Tweet.Hashtags hashtags={tweet.hashtags} />
-                    <Tweet.Media media={tweet.media} />
-                    <Tweet.ActionBar tweet={tweet} />
-                  </Tweet.ContentRoot>
-                </Tweet.Root>
+                <React.Fragment key={index}>
+                  <Tweet.Root tweet={tweet}>
+                    <Tweet.Profile tweet={tweet} />
+                    <Tweet.ContentRoot>
+                      <Tweet.UserInfo tweet={tweet} />
+                      <Tweet.TextContent value={tweet.text} />
+                      <Tweet.Hashtags hashtags={tweet.hashtags} />
+                      <Tweet.Media media={tweet.media} />
+                      <Tweet.ActionBar tweet={tweet} />
+                    </Tweet.ContentRoot>
+                  </Tweet.Root>
+                </React.Fragment>
               )
             })}
           </React.Fragment>
