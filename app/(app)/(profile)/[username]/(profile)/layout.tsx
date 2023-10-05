@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import { ArrowLeft } from 'lucide-react'
 
 import { getUser } from '@/actions/get-user'
 import { Profile } from '@/components/profile'

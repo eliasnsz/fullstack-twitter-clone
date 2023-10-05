@@ -28,7 +28,7 @@ import { createNewTweet } from '@/actions/create-new-tweet'
 import { useQueryClient } from 'react-query'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import { useSession } from 'next-auth/react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export function NewTweetForm() {
   const inputRef = useRef<null | HTMLTextAreaElement>(null)
