@@ -7,6 +7,7 @@ import { api } from '@/lib/api'
 import { dayjs } from '@/lib/dayjs'
 import { NewReplyForm } from '@/components/new-reply-form'
 import { ChildrenFeed } from '@/components/children-feed'
+import Link from 'next/link'
 
 interface Params {
   params: { id: string; username: string }
@@ -19,16 +20,29 @@ export default async function PostPage({ params }: Params) {
     `/user/${username}/tweets/${id}`,
   )
 
+  const { data: parent } = tweet.parentId
+    ? await api.get<TweetType>(`/user/${username}/tweets/${tweet.id}/parent`)
+    : { data: null }
+
   return (
     <div>
-      <nav className="sticky mb-4 top-0 backdrop-blur-lg bg-transparent p-2 flex items-center gap-6">
+      <nav className="sticky z-20 mb-4 top-0 backdrop-blur-lg bg-transparent p-2 flex items-center gap-6">
         <ArrowBack />
-        <h4 className="text-xl mt-0.5 font-extrabold text-foreground">
-          Perfil
-        </h4>
+        <h4 className="text-xl mt-0.5 font-extrabold text-foreground">Post</h4>
       </nav>
       <div>
         <div className="px-3.5">
+          {parent && (
+            <p className="text-sm mb-2 text-muted-foreground">
+              Em resposta à{' '}
+              <Link
+                href={`/${parent.user.username}/status/${parent.id}`}
+                className="text-blue-500"
+              >
+                @{parent.user.username}
+              </Link>
+            </p>
+          )}
           <div className="flex relative items-center gap-3">
             <Tweet.Profile tweet={tweet} />
             <Tweet.UserInfo reply tweet={tweet} />

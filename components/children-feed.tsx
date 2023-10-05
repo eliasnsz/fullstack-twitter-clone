@@ -69,7 +69,7 @@ export function ChildrenFeed({ params }: Params) {
                 <React.Fragment key={children.id}>
                   <Tweet.Root
                     className={`${
-                      tweet.children.length ? 'border-none' : ''
+                      tweet.children.length > 1 ? 'border-none' : ''
                     } relative`}
                     tweet={tweet}
                   >
@@ -88,7 +88,7 @@ export function ChildrenFeed({ params }: Params) {
                   {tweet.children.length > 1 && (
                     <Link
                       href={`/${children.user.username}/status/${children.parentId}`}
-                      className="px-4 py-2 block relative group cursor-pointer hover:bg-muted"
+                      className="px-4 py-2 border-b border-b-border block relative group cursor-pointer hover:bg-muted"
                     >
                       <div className="w-fit h-full left-[34px] bg-background gap-1.5 justify-center items-center top-0 absolute flex flex-col">
                         <div className="w-[3px] h-[3px] transition-colors group-hover:bg-muted-foreground rounded-full bg-border" />

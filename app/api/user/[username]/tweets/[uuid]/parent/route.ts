@@ -23,12 +23,12 @@ export async function GET(request: Request, { params }: Params) {
     )
   }
 
-  const tweet = await prisma.tweet.findUnique({
-    include: { parent: true, _count: true },
-    where: { id: uuid, user: { username } },
+  const currentTweet = await prisma.tweet.findUnique({
+    include: { parent: true },
+    where: { id: uuid },
   })
 
-  if (!tweet) {
+  if (!currentTweet) {
     return NextResponse.json(
       new NotFoundError({
         message: 'Tweet não encontrado',
@@ -36,7 +36,7 @@ export async function GET(request: Request, { params }: Params) {
     )
   }
 
-  if (!tweet.parentId) {
+  if (!currentTweet.parentId) {
     return NextResponse.json(
       new BaseError({
         message: 'Este já é o conteúdo raiz',
@@ -46,5 +46,10 @@ export async function GET(request: Request, { params }: Params) {
     )
   }
 
-  return NextResponse.json(tweet.parent)
+  const parent = await prisma.tweet.findUnique({
+    where: { id: currentTweet.parentId },
+    include: { user: true, _count: true },
+  })
+
+  return NextResponse.json(parent)
 }

@@ -6,8 +6,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -25,22 +27,23 @@ model User {
   profile_image_url String?
   cover_image_url   String?
   verified          Boolean  @default(false)
-  tweets            Tweet[]
+
+  tweets Tweet[]
+  likes  Like[]
 }
 
 model Tweet {
   id     String @id @default(uuid())
   userId String
 
-  text        String
-  created_at  DateTime @default(now())
-  retweets    Int      @default(0)
-  comments    Int      @default(0)
-  likes_count Int      @default(0)
-  views       Int      @default(0)
-  hashtags    String[]
-  mentions    String[]
-  user        User     @relation(fields: [userId], references: [id])
+  text       String
+  created_at DateTime @default(now())
+  retweets   Int      @default(0)
+  comments   Int      @default(0)
+  views      Int      @default(0)
+  hashtags   String[]
+  mentions   String[]
+  user       User     @relation(fields: [userId], references: [id])
 
   parent   Tweet?  @relation("Parent", fields: [parentId], references: [id])
   parentId String?
@@ -49,4 +52,14 @@ model Tweet {
   root         Tweet?  @relation("Root", fields: [rootId], references: [id])
   rootId       String?
   rootChildren Tweet[] @relation("Root")
+
+  likes Like[]
+}
+
+model Like {
+  id      String  @id @default(uuid())
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  Tweet   Tweet?  @relation(fields: [tweetId], references: [id])
+  tweetId String?
 }
