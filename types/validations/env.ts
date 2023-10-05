@@ -14,8 +14,11 @@ function requiredOnEnv(env: z.infer<typeof nodeEnv>) {
 const envSchema = z.object({
   NODE_ENV: nodeEnv.default('development'),
   DATABASE_URL: z.string().url(),
-  UPSTASH_REDIS_REST_URL: z.string().url(),
-  UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+  UPSTASH_REDIS_REST_URL: z.string().url().refine(requiredOnEnv('development')),
+  UPSTASH_REDIS_REST_TOKEN: z
+    .string()
+    .min(1)
+    .refine(requiredOnEnv('development')),
   GITHUB_SECRET: z.string().min(1),
   GITHUB_ID: z.string().min(1),
   GOOGLE_SECRET: z.string().min(1),
